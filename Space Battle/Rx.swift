@@ -24,22 +24,43 @@ class Observable<T> {
 extension Observable {
     func map<R>(mapper: (T -> R)) -> Observable<R> {
         let o = Observable<R>()
-        self.subscribe({ x in o.OnNext(mapper(x)) })
+        self.subscribe({ o.OnNext(mapper($0)) })
+        return o
+    }
+
+    func map2<T2, R>(mapper: ((T, T2) -> R), o2: Observable<T2>) -> Observable<R> {
+        var v1: T? = nil
+        var v2: T2? = nil
+        let o = Observable<R>()
+        let performNext = {
+            if case .Some(let _v1) = v1 {
+                if case .Some(let _v2) = v2 {
+                    let val = mapper(_v1, _v2)
+                    o.OnNext(val)
+                }
+            }
+        }
+
+        self.subscribe({ v1 = $0; performNext() })
+        o2.subscribe({ v2 = $0; performNext() })
+
         return o
     }
 
     func filter(predictor: (T -> Bool)) -> Observable<T> {
         let o = Observable<T>()
-        self.subscribe({ x in if predictor(x) {
-            o.OnNext(x)
-        } })
+        self.subscribe({
+            x in if predictor(x) {
+                o.OnNext(x)
+            }
+        })
         return o
     }
 
-    func merge(o1: Observable<T>, o2: Observable<T>) -> Observable<T> {
+    func merge(o2: Observable<T>) -> Observable<T> {
         let o = Observable<T>()
-        o1.subscribe({ x in o.OnNext(x) })
-        o2.subscribe({ x in o.OnNext(x) })
+        self.subscribe({ o.OnNext($0) })
+        o2.subscribe({ o.OnNext($0) })
         return o
     }
 
