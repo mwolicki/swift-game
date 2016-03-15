@@ -11,7 +11,7 @@ class Observable<T> {
     private var subscribers:[(T->())] = []
     func subscribe(fun:(T->())) -> Observable<T>  {
         subscribers.append(fun)
-        self
+        return self
     }
 
     func OnNext(el:T){
@@ -23,18 +23,24 @@ class Observable<T> {
 
 }
 
-extension Observable<T> {
+extension Observable {
     func map<R>(mapper:(T->R)) -> Observable<R>{
         let o=Observable<R>()
-        self.subscribe({x -> o.OnNext(mapper (x))})
-        o
+        self.subscribe({x in o.OnNext(mapper (x))})
+        return o
     }
 
-    func filter(predictor:(T->bool)) -> Observable<T>{
+    func filter(predictor:(T->Bool)) -> Observable<T>{
         let o=Observable<T>()
         self.subscribe({x in if predictor(x) { o.OnNext(x)}})
-        o
+        return o
     }
 
-    
+    func merge(o1:Observable<T>, o2:Observable<T>) -> Observable<T>{
+        let o=Observable<T>()
+        o1.subscribe({x in o.OnNext(x)})
+        o2.subscribe({x in o.OnNext(x)})
+        return o
+    }
+
 }
