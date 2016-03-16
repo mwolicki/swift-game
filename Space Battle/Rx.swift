@@ -7,7 +7,6 @@ import Foundation
 
 
 class Observable<T> {
-    typealias A = T
     private var subscribers: [(T -> ())] = []
     func subscribe(fun: (T -> ())) -> Observable<T> {
         subscribers.append(fun)
@@ -26,6 +25,10 @@ extension Observable {
         let o = Observable<R>()
         self.subscribe({ o.OnNext(mapper($0)) })
         return o
+    }
+
+    func iter(fun: (T -> ())) {
+        self.subscribe({ fun($0) })
     }
 
     func map2<T2, R>(mapper: ((T, T2) -> R), o2: Observable<T2>) -> Observable<R> {
@@ -63,5 +66,4 @@ extension Observable {
         o2.subscribe({ o.OnNext($0) })
         return o
     }
-
 }
