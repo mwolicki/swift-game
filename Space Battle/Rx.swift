@@ -53,8 +53,8 @@ extension Observable {
     func filter(predictor: (T -> Bool)) -> Observable<T> {
         let o = Observable<T>()
         self.subscribe({
-            x in if predictor(x) {
-                o.OnNext(x)
+            if predictor($0) {
+                o.OnNext($0)
             }
         })
         return o
