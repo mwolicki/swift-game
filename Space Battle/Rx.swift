@@ -6,35 +6,69 @@
 import Foundation
 
 
+class HandlerWrapper<T>{
+    typealias Handler = T -> ()
+    private let _handler : Handler
+    init (handler:Handler){
+        _handler = handler
+    }
+    
+    func invoke(arg : T){
+        _handler(arg)
+    }
+}
+
 class Observable<T> {
-    private var subscribers: [(T -> ())] = []
-    func subscribe(fun: (T -> ())) -> Observable<T> {
-        subscribers.append(fun)
-        return self
+    init(){
+        _onDispose = {}
+    }
+    
+    private let _onDispose:Dispose
+    
+    init(onDispose:Dispose){
+        _onDispose = onDispose
+    }
+    
+    typealias Handler = T -> ()
+    typealias Dispose = () -> ()
+    
+    private var subscribers = [HandlerWrapper<T>]()
+    
+    func subscribe(fun: Handler) -> Dispose{
+        let wrapper = HandlerWrapper(handler: fun)
+        subscribers.append(wrapper);
+        return {
+            self.subscribers = self.subscribers.filter({$0 !== wrapper})
+            if self.subscribers.count == 0 {
+                self._onDispose()}
+        }
     }
 
     func OnNext(el: T) {
         for s in subscribers {
-            s(el)
+            s.invoke(el)
         }
     }
 }
 
 extension Observable {
     func map<R>(mapper: (T -> R)) -> Observable<R> {
-        let o = Observable<R>()
-        self.subscribe({ o.OnNext(mapper($0)) })
+        var disposer:Dispose = {}
+        let o = Observable<R>(onDispose: {disposer()})
+        disposer = self.subscribe({ o.OnNext(mapper($0)) })
         return o
     }
 
-    func iter(fun: (T -> ())) {
-        self.subscribe({ fun($0) })
+    func iterOnce(fun: (T -> ())) {
+        self.subscribe({ fun($0) })()
     }
 
     func map2<T2, R>(mapper: ((T, T2) -> R), o2: Observable<T2>) -> Observable<R> {
         var v1: T? = nil
         var v2: T2? = nil
-        let o = Observable<R>()
+        
+        var disposer:Dispose = {}
+        let o = Observable<R>(onDispose: {disposer()})
         let performNext = {
             if case .Some(let _v1) = v1 {
                 if case .Some(let _v2) = v2 {
@@ -44,15 +78,16 @@ extension Observable {
             }
         }
 
-        self.subscribe({ v1 = $0; performNext() })
-        o2.subscribe({ v2 = $0; performNext() })
-
+        let disposer1 = self.subscribe({ v1 = $0; performNext() })
+        let disposer2 = o2.subscribe({ v2 = $0; performNext() })
+        disposer = {disposer1(); disposer2()}
         return o
     }
 
     func filter(predictor: (T -> Bool)) -> Observable<T> {
-        let o = Observable<T>()
-        self.subscribe({
+        var disposer:Dispose = {}
+        let o = Observable<T>(onDispose: {disposer()})
+        disposer = self.subscribe({
             if predictor($0) {
                 o.OnNext($0)
             }
@@ -61,9 +96,11 @@ extension Observable {
     }
 
     func merge(o2: Observable<T>) -> Observable<T> {
-        let o = Observable<T>()
-        self.subscribe({ o.OnNext($0) })
-        o2.subscribe({ o.OnNext($0) })
+        var disposer:Dispose = {}
+        let o = Observable<T>(onDispose: {disposer()})
+        let disposer1 = self.subscribe({ o.OnNext($0) })
+        let disposer2 = o2.subscribe({ o.OnNext($0) })
+        disposer = {disposer1(); disposer2()}
         return o
     }
 }

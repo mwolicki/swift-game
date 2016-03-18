@@ -15,6 +15,8 @@
 		0A00C1E41C978CAC001BF9DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A00C1E31C978CAC001BF9DC /* Assets.xcassets */; };
 		0A00C1E71C978CAC001BF9DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A00C1E51C978CAC001BF9DC /* LaunchScreen.storyboard */; };
 		0A00C1EF1C978D5C001BF9DC /* Logic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A00C1EE1C978D5C001BF9DC /* Logic.swift */; };
+		0A458D891C9CB58500B400E9 /* PipelineOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A458D881C9CB58500B400E9 /* PipelineOperator.swift */; };
+		0A458D8B1C9CB62E00B400E9 /* GamieLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A458D8A1C9CB62E00B400E9 /* GamieLogic.swift */; };
 		61384D47F194A30C2D612C72 /* Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613848100B8D10652E0E90E1 /* Rx.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +31,8 @@
 		0A00C1E61C978CAC001BF9DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A00C1E81C978CAC001BF9DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A00C1EE1C978D5C001BF9DC /* Logic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logic.swift; sourceTree = "<group>"; };
+		0A458D881C9CB58500B400E9 /* PipelineOperator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipelineOperator.swift; sourceTree = "<group>"; };
+		0A458D8A1C9CB62E00B400E9 /* GamieLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamieLogic.swift; sourceTree = "<group>"; };
 		613848100B8D10652E0E90E1 /* Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +76,8 @@
 				0A00C1E81C978CAC001BF9DC /* Info.plist */,
 				0A00C1EE1C978D5C001BF9DC /* Logic.swift */,
 				613848100B8D10652E0E90E1 /* Rx.swift */,
+				0A458D881C9CB58500B400E9 /* PipelineOperator.swift */,
+				0A458D8A1C9CB62E00B400E9 /* GamieLogic.swift */,
 			);
 			path = "Space Battle";
 			sourceTree = "<group>";
@@ -150,10 +156,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A00C1DD1C978CAC001BF9DC /* GameScene.swift in Sources */,
+				0A458D891C9CB58500B400E9 /* PipelineOperator.swift in Sources */,
 				0A00C1DF1C978CAC001BF9DC /* GameViewController.swift in Sources */,
 				0A00C1D91C978CAC001BF9DC /* AppDelegate.swift in Sources */,
 				0A00C1EF1C978D5C001BF9DC /* Logic.swift in Sources */,
 				61384D47F194A30C2D612C72 /* Rx.swift in Sources */,
+				0A458D8B1C9CB62E00B400E9 /* GamieLogic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +315,7 @@
 				0A00C1ED1C978CAC001BF9DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
