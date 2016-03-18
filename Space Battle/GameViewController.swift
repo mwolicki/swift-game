@@ -9,12 +9,37 @@
 import UIKit
 import SpriteKit
 
+class GameLogic{
+    static func start(gameScene:GameScene){
+        Signal.touchesBegan
+        .filter({touches in touches.count == 1})
+            .map({$0.first!})
+        .subscribe({touch in
+            let location = touch.locationInNode(gameScene)
+
+            let sprite = SKSpriteNode(imageNamed:"Spaceship")
+
+            sprite.xScale = 0.5
+            sprite.yScale = 0.5
+            sprite.position = location
+
+            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+
+            sprite.runAction(SKAction.repeatActionForever(action))
+
+            gameScene.addChild(sprite)})
+        };
+
+}
+
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         if let scene = GameScene(fileNamed:"GameScene") {
+            
+            GameLogic.start(scene)
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true
