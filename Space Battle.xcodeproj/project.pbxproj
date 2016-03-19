@@ -16,7 +16,7 @@
 		0A00C1E71C978CAC001BF9DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A00C1E51C978CAC001BF9DC /* LaunchScreen.storyboard */; };
 		0A00C1EF1C978D5C001BF9DC /* Logic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A00C1EE1C978D5C001BF9DC /* Logic.swift */; };
 		0A458D891C9CB58500B400E9 /* PipelineOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A458D881C9CB58500B400E9 /* PipelineOperator.swift */; };
-		0A458D8B1C9CB62E00B400E9 /* GamieLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A458D8A1C9CB62E00B400E9 /* GamieLogic.swift */; };
+		0A458D8B1C9CB62E00B400E9 /* DrawGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A458D8A1C9CB62E00B400E9 /* DrawGame.swift */; };
 		61384D47F194A30C2D612C72 /* Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613848100B8D10652E0E90E1 /* Rx.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +32,7 @@
 		0A00C1E81C978CAC001BF9DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A00C1EE1C978D5C001BF9DC /* Logic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logic.swift; sourceTree = "<group>"; };
 		0A458D881C9CB58500B400E9 /* PipelineOperator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipelineOperator.swift; sourceTree = "<group>"; };
-		0A458D8A1C9CB62E00B400E9 /* GamieLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamieLogic.swift; sourceTree = "<group>"; };
+		0A458D8A1C9CB62E00B400E9 /* DrawGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawGame.swift; sourceTree = "<group>"; };
 		613848100B8D10652E0E90E1 /* Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,6 +66,7 @@
 		0A00C1D71C978CAC001BF9DC /* Space Battle */ = {
 			isa = PBXGroup;
 			children = (
+				0A458D8D1C9CCD1900B400E9 /* Draw */,
 				0A00C1D81C978CAC001BF9DC /* AppDelegate.swift */,
 				0A00C1DA1C978CAC001BF9DC /* GameScene.sks */,
 				0A00C1DC1C978CAC001BF9DC /* GameScene.swift */,
@@ -77,9 +78,16 @@
 				0A00C1EE1C978D5C001BF9DC /* Logic.swift */,
 				613848100B8D10652E0E90E1 /* Rx.swift */,
 				0A458D881C9CB58500B400E9 /* PipelineOperator.swift */,
-				0A458D8A1C9CB62E00B400E9 /* GamieLogic.swift */,
 			);
 			path = "Space Battle";
+			sourceTree = "<group>";
+		};
+		0A458D8D1C9CCD1900B400E9 /* Draw */ = {
+			isa = PBXGroup;
+			children = (
+				0A458D8A1C9CB62E00B400E9 /* DrawGame.swift */,
+			);
+			name = Draw;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,7 +169,7 @@
 				0A00C1D91C978CAC001BF9DC /* AppDelegate.swift in Sources */,
 				0A00C1EF1C978D5C001BF9DC /* Logic.swift in Sources */,
 				61384D47F194A30C2D612C72 /* Rx.swift in Sources */,
-				0A458D8B1C9CB62E00B400E9 /* GamieLogic.swift in Sources */,
+				0A458D8B1C9CB62E00B400E9 /* DrawGame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

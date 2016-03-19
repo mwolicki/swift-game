@@ -5,8 +5,4 @@ public func |> <T,U>(lhs: T, rhs: T -> U) -> U {
     return rhs(lhs)
 }
 
-
-
-public func ignore<T>(_:T){
-    
-}
+public func ignore<T>(_:T){ }

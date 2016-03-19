@@ -44,7 +44,7 @@ class Observable<T> {
         }
     }
 
-    func OnNext(el: T) {
+    func set(el: T) {
         for s in subscribers {
             s.invoke(el)
         }
@@ -55,7 +55,7 @@ extension Observable {
     func map<R>(mapper: (T -> R)) -> Observable<R> {
         var disposer:Dispose = {}
         let o = Observable<R>(onDispose: {disposer()})
-        disposer = self.subscribe({ o.OnNext(mapper($0)) })
+        disposer = self.subscribe({ o.set(mapper($0)) })
         return o
     }
 
@@ -73,7 +73,7 @@ extension Observable {
             if case .Some(let _v1) = v1 {
                 if case .Some(let _v2) = v2 {
                     let val = mapper(_v1, _v2)
-                    o.OnNext(val)
+                    o.set(val)
                 }
             }
         }
@@ -89,7 +89,7 @@ extension Observable {
         let o = Observable<T>(onDispose: {disposer()})
         disposer = self.subscribe({
             if predictor($0) {
-                o.OnNext($0)
+                o.set($0)
             }
         })
         return o
@@ -98,8 +98,8 @@ extension Observable {
     func merge(o2: Observable<T>) -> Observable<T> {
         var disposer:Dispose = {}
         let o = Observable<T>(onDispose: {disposer()})
-        let disposer1 = self.subscribe({ o.OnNext($0) })
-        let disposer2 = o2.subscribe({ o.OnNext($0) })
+        let disposer1 = self.subscribe({ o.set($0) })
+        let disposer2 = o2.subscribe({ o.set($0) })
         disposer = {disposer1(); disposer2()}
         return o
     }

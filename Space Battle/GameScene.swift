@@ -7,25 +7,37 @@
 //
 
 import SpriteKit
+import CoreMotion
+import Foundation
 
  class Signal {
     static let touchesBegan = Observable<Set<UITouch>>();
+    static let onGameStart = Observable<(SKScene,SKView)>();
+    static let accelerometerUpdate = Observable<(Double,Double)>();
 }
 
 class GameScene: SKScene {
 
+    let motionManager = CMMotionManager()
+
+    
     override func didMoveToView(view: SKView) {
-        /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!"
-        myLabel.fontSize = 45
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
+        Signal.onGameStart.set((self,view))
         
-        self.addChild(myLabel)
+        if self.motionManager.accelerometerAvailable == true {
+            self.motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.currentQueue()!, withHandler:{
+                data, error in
+                if let x = data?.acceleration.x{
+                    if let y =  data?.acceleration.y{
+                        Signal.accelerometerUpdate.set((x, y));
+                    }
+                }
+            })
+        }
     }
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        Signal.touchesBegan.OnNext(touches);
+        Signal.touchesBegan.set(touches);
 
     }
    
