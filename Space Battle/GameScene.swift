@@ -14,6 +14,8 @@ import Foundation
     static let touchesBegan = Observable<Set<UITouch>>();
     static let onGameStart = Observable<(SKScene,SKView)>();
     static let accelerometerUpdate = Observable<(Double,Double)>();
+    static let update = Observable<CFTimeInterval>();
+
 }
 
 class GameScene: SKScene {
@@ -42,6 +44,6 @@ class GameScene: SKScene {
     }
    
     override func update(currentTime: CFTimeInterval) {
-        /* Called before each frame is rendered */
+        Signal.update.set(currentTime);
     }
 }
