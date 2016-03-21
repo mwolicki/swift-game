@@ -18,6 +18,13 @@ enum Asteroid : String{
 }
 
 
+enum GameObject : UInt32{
+    case Laser = 0x01
+    case Asteroid = 0x02
+    case Spaceship = 0x4
+}
+
+
 func startGame(scene:SKScene){
     drawBackground(scene)
     drawSpaceship(scene)
@@ -70,6 +77,9 @@ func startGame(scene:SKScene){
     
 }
 
+
+
+
 func drawBackground(scene:SKScene){
     let background = SKSpriteNode(imageNamed: "background")
     background.size = scene.size
@@ -83,6 +93,15 @@ func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat
     asteroid.position = position
     asteroid.xScale = scale
     asteroid.yScale = scale
+    
+    let physicsBody = SKPhysicsBody(rectangleOfSize: asteroid.size)
+    physicsBody.dynamic = true;
+    physicsBody.collisionBitMask = GameObject.Laser.rawValue | GameObject.Spaceship.rawValue;
+    physicsBody.categoryBitMask = GameObject.Asteroid.rawValue;
+    physicsBody.contactTestBitMask = GameObject.Asteroid.rawValue;
+    physicsBody.
+    asteroid.physicsBody = physicsBody
+    
     
     let angel = CGFloat(arc4random_uniform(12) + 1) - 6
     let duration = Double(arc4random_uniform(20) + 1)
@@ -106,6 +125,14 @@ func drawSpaceship(scene:SKScene){
     spaceship.yScale = 0.25
     spaceship.position = CGPointMake(scene.size.width/2, spaceship.size.height)
     spaceship.zPosition = 1
+    
+    let physicsBody = SKPhysicsBody()
+    physicsBody.dynamic = true;
+    physicsBody.collisionBitMask = GameObject.Laser.rawValue | GameObject.Asteroid.rawValue;
+    physicsBody.categoryBitMask = GameObject.Spaceship.rawValue;
+    physicsBody.contactTestBitMask = GameObject.Spaceship.rawValue;
+  //  spaceship.physicsBody = physicsBody
+    
     scene.addChild(spaceship)
 }
 
@@ -129,7 +156,15 @@ func fire(scene:SKScene, position:CGPoint){
     laser.fillColor = SKColor.yellowColor()
     laser.position = position
     let moveAction = SKAction.moveToY (scene.size.height + 15, duration: 1.5)
-    laser.runAction(moveAction, completion: { laser.removeFromParent()  })
+    laser.runAction(moveAction, completion: { laser.removeFromParent() })
+    
+    let physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 3, height: 15))
+    physicsBody.dynamic = true;
+    physicsBody.collisionBitMask = GameObject.Spaceship.rawValue | GameObject.Asteroid.rawValue;
+    physicsBody.categoryBitMask = GameObject.Laser.rawValue;
+    physicsBody.contactTestBitMask = GameObject.Laser.rawValue;
+    laser.physicsBody = physicsBody
+    
     scene.addChild(laser)
 }
 
