@@ -25,9 +25,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
     func didBeginContact(contact: SKPhysicsContact) {
+        print("\(contact.bodyA.categoryBitMask) x \(contact.bodyB.categoryBitMask)")
         Signal.didBeginContact.set((self,contact))
         if(contact.bodyA.categoryBitMask != contact.bodyB.categoryBitMask){
-            
+           
             if let node = contact.bodyA.node{
                 node.removeFromParent()
             }
@@ -37,8 +38,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func didEndContact(contact: SKPhysicsContact){}
+    
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
+        self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         Signal.onGameStart.set((self,view))
         
         if self.motionManager.accelerometerAvailable == true {

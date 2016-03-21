@@ -94,12 +94,12 @@ func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat
     asteroid.xScale = scale
     asteroid.yScale = scale
     
-    let physicsBody = SKPhysicsBody(rectangleOfSize: asteroid.size)
-    physicsBody.dynamic = true;
-    physicsBody.collisionBitMask = GameObject.Laser.rawValue | GameObject.Spaceship.rawValue;
-    physicsBody.categoryBitMask = GameObject.Asteroid.rawValue;
-    physicsBody.contactTestBitMask = GameObject.Asteroid.rawValue;
-    physicsBody.
+    let physicsBody = SKPhysicsBody(texture: asteroid.texture!, size: asteroid.size)
+    physicsBody.dynamic = true
+    physicsBody.affectedByGravity = false
+    physicsBody.collisionBitMask = 0
+    physicsBody.categoryBitMask = GameObject.Asteroid.rawValue | GameObject.Spaceship.rawValue
+    physicsBody.contactTestBitMask = GameObject.Laser.rawValue
     asteroid.physicsBody = physicsBody
     
     
@@ -126,12 +126,14 @@ func drawSpaceship(scene:SKScene){
     spaceship.position = CGPointMake(scene.size.width/2, spaceship.size.height)
     spaceship.zPosition = 1
     
-    let physicsBody = SKPhysicsBody()
-    physicsBody.dynamic = true;
-    physicsBody.collisionBitMask = GameObject.Laser.rawValue | GameObject.Asteroid.rawValue;
-    physicsBody.categoryBitMask = GameObject.Spaceship.rawValue;
-    physicsBody.contactTestBitMask = GameObject.Spaceship.rawValue;
-  //  spaceship.physicsBody = physicsBody
+    let physicsBody = SKPhysicsBody(texture: spaceship.texture!, size: spaceship.size)
+    physicsBody.dynamic = true
+    physicsBody.affectedByGravity = false
+    physicsBody.collisionBitMask = 0
+    physicsBody.categoryBitMask = GameObject.Spaceship.rawValue
+    physicsBody.contactTestBitMask = GameObject.Asteroid.rawValue
+    spaceship.physicsBody = physicsBody
+
     
     scene.addChild(spaceship)
 }
@@ -143,7 +145,9 @@ func moveSpaceship (model : State, scene:SKScene, spaceship: SKSpriteNode){
         let pos = model.ShipMovement == Direction.Left
             ? spaceship.size.width/2
             : scene.size.width - spaceship.size.width/2
-        let action = SKAction.moveToX (pos, duration: 1.5)
+        
+        let speed = Double(1.5 * abs(pos - spaceship.position.x)/scene.size.width)
+        let action = SKAction.moveToX (pos, duration: speed)
         
         spaceship.runAction (action, withKey: "moveSpaceship")
     }
@@ -159,20 +163,22 @@ func fire(scene:SKScene, position:CGPoint){
     laser.runAction(moveAction, completion: { laser.removeFromParent() })
     
     let physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 3, height: 15))
-    physicsBody.dynamic = true;
-    physicsBody.collisionBitMask = GameObject.Spaceship.rawValue | GameObject.Asteroid.rawValue;
-    physicsBody.categoryBitMask = GameObject.Laser.rawValue;
-    physicsBody.contactTestBitMask = GameObject.Laser.rawValue;
+    physicsBody.dynamic = true
+    physicsBody.affectedByGravity = false
+    physicsBody.collisionBitMask =  0
+    physicsBody.categoryBitMask = GameObject.Laser.rawValue
+    physicsBody.contactTestBitMask = GameObject.Asteroid.rawValue
     laser.physicsBody = physicsBody
     
     scene.addChild(laser)
 }
 
 func drawModel (model:State, scene:SKScene) {
-    let spaceship = scene.childNodeWithName("spaceship") as! SKSpriteNode
-    moveSpaceship(model, scene: scene, spaceship: spaceship)
-    if model.Fire {
-        fire(scene, position: spaceship.position)
+    if let spaceship : SKSpriteNode = scene.childNodeWithName("spaceship") as! SKSpriteNode?{
+        moveSpaceship(model, scene: scene, spaceship: spaceship)
+        if model.Fire {
+            fire(scene, position: spaceship.position)
+        }
     }
 }
 
