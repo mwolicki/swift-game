@@ -27,8 +27,8 @@ class GameLogic{
         //Signal.accelerometerUpdate.subscribe({ x,_ in print("\(x)")})|>ignore
         Signal.accelerometerUpdate
             .map({x,_ in
-                return x < -0.1 ? Direction.Left
-                         : x > 0.1 ? Direction.Right : Direction.None})
+                return x < -0.05 ? Direction.Left
+                         : x > 0.05 ? Direction.Right : Direction.None})
             .subscribe {
                 if currentState.ShipMovement != $0{
                     currentState.ShipMovement = $0

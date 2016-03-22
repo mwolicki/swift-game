@@ -211,7 +211,7 @@ func drawModel (model:State, scene:SKScene) {
         }
     }
     else{
-        presentScene(scene.view!)
+        //presentScene(scene.view!)
     }
 }
 
