@@ -9,28 +9,34 @@
 import UIKit
 import SpriteKit
 
+
+func presentScene(skView:SKView){
+    if let scene = GameScene(fileNamed:"GameScene") {
+        
+        GameLogic.start (scene)
+        // Configure the view.
+        
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+        
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .ResizeFill
+        
+        skView.presentScene(scene)
+    }
+
+}
+
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let scene = GameScene(fileNamed:"GameScene") {
-            
-            GameLogic.start (scene)
-            // Configure the view.
-            let skView = self.view as! SKView
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = true
-            
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .ResizeFill
-            
-            skView.presentScene(scene)
-        }
-    }
+                let skView = self.view as! SKView
+                presentScene(skView)
+            }
 
     override func shouldAutorotate() -> Bool {
         return true

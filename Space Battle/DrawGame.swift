@@ -83,7 +83,13 @@ func onUpdate(scene:SKScene, _:CFTimeInterval){
 }
 
 func onContact (scene:SKScene, contact:SKPhysicsContact){
+    
     if(contact.bodyA.categoryBitMask != contact.bodyB.categoryBitMask){
+        if let bodyA = GameObject(rawValue: contact.bodyA.categoryBitMask) {
+            if bodyA == .Spaceship {
+                gameOver(scene)
+            }
+        }
         
         if let node = contact.bodyA.node{
             node.removeFromParent()
@@ -92,6 +98,16 @@ func onContact (scene:SKScene, contact:SKPhysicsContact){
             node.removeFromParent()
         }
     }
+}
+
+func gameOver(scene:SKScene){
+    let gameover = SKLabelNode(fontNamed: "Chalkduster")
+    gameover.text = "Game Over"
+    gameover.fontSize = 50
+    gameover.fontColor = SKColor.blueColor()
+    gameover.position = CGPointMake(scene.size.width/2, scene.size.height/2)
+    gameover.zPosition = 1
+    scene.addChild(gameover)
 }
 
 func drawBackground(scene:SKScene){
@@ -193,6 +209,9 @@ func drawModel (model:State, scene:SKScene) {
         if model.Fire {
             fire(scene, position: spaceship.position)
         }
+    }
+    else{
+        presentScene(scene.view!)
     }
 }
 
