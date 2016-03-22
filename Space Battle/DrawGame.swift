@@ -60,18 +60,16 @@ func startGame(scene:SKScene){
     setAsteroid(20, .C, 0.7)
     
     
-    let objects :[Asteroid] = [Asteroid.A,Asteroid.B,Asteroid.C,Asteroid.D]
-    
-    
     Signal.update.subscribe { _ in
         if arc4random_uniform(5000) > 4950{
             let pos = CGFloat(arc4random_uniform(UInt32(scene.size.width)))
             
-            let objPos = Int32(arc4random_uniform(UInt32(objects.count)));
-            let obj = objects[3];
-            let scale = (Double(arc4random_uniform(95))+5.0)/100.0
+            let objPos = Int32(arc4random_uniform(4))
+            if let obj = Asteroid(rawValue: "asteroid\(objPos)"){
+                let scale = (Double(arc4random_uniform(95))+5.0)/100.0
+                setAsteroid(pos, obj, CGFloat(scale))
+            }
             
-            setAsteroid(pos, obj, CGFloat(scale))
         }
          } |> ignore
     
