@@ -60,23 +60,39 @@ func startGame(scene:SKScene){
     setAsteroid(20, .C, 0.7)
     
     
-    Signal.update.subscribe { _ in
-        if arc4random_uniform(5000) > 4950{
-            let pos = CGFloat(arc4random_uniform(UInt32(scene.size.width)))
-            
-            let objPos = Int32(arc4random_uniform(4))
-            if let obj = Asteroid(rawValue: "asteroid\(objPos)"){
-                let scale = (Double(arc4random_uniform(95))+5.0)/100.0
-                setAsteroid(pos, obj, CGFloat(scale))
-            }
-            
-        }
-         } |> ignore
+    Signal.update.subscribe (onUpdate) |> ignore
+    Signal.didBeginContact.subscribe(onContact) |> ignore
     
 }
 
+func onUpdate(scene:SKScene, _:CFTimeInterval){
+    
+    let setAsteroid = { x, type, scale in
+        drawAsteroid(scene, position: CGPointMake(x, scene.size.height), type: type, scale: scale)
+    }
+    
+    if arc4random_uniform(5000) > 4950{
+        let pos = CGFloat(arc4random_uniform(UInt32(scene.size.width)))
+        
+        let objPos = Int32(arc4random_uniform(4))
+        if let obj = Asteroid(rawValue: "asteroid\(objPos)"){
+            let scale = (Double(arc4random_uniform(95))+5.0)/100.0
+            setAsteroid(pos, obj, CGFloat(scale))
+        }
+    }
+}
 
-
+func onContact (scene:SKScene, contact:SKPhysicsContact){
+    if(contact.bodyA.categoryBitMask != contact.bodyB.categoryBitMask){
+        
+        if let node = contact.bodyA.node{
+            node.removeFromParent()
+        }
+        if let node = contact.bodyB.node{
+            node.removeFromParent()
+        }
+    }
+}
 
 func drawBackground(scene:SKScene){
     let background = SKSpriteNode(imageNamed: "background")
@@ -103,7 +119,7 @@ func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat
     
     let angel = CGFloat(arc4random_uniform(12) + 1) - 6
     let duration = Double(arc4random_uniform(20) + 1)
-    let speed = Double(arc4random_uniform(30) + 1)
+    let speed = Double(arc4random_uniform(25) + 5)
     
     
     asteroid.runAction(SKAction.repeatActionForever(SKAction.rotateByAngle(angel, duration:duration)))

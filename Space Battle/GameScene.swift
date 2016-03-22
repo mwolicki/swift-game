@@ -14,7 +14,7 @@ import Foundation
     static let touchesBegan = Observable<Set<UITouch>>();
     static let onGameStart = Observable<(SKScene,SKView)>();
     static let accelerometerUpdate = Observable<(Double,Double)>();
-    static let update = Observable<CFTimeInterval>();
+    static let update = Observable<(SKScene, CFTimeInterval)>();
     static let didBeginContact = Observable<(SKScene, SKPhysicsContact)>();
 }
 
@@ -25,17 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
     func didBeginContact(contact: SKPhysicsContact) {
-        print("\(contact.bodyA.categoryBitMask) x \(contact.bodyB.categoryBitMask)")
         Signal.didBeginContact.set((self,contact))
-        if(contact.bodyA.categoryBitMask != contact.bodyB.categoryBitMask){
-           
-            if let node = contact.bodyA.node{
-                node.removeFromParent()
-            }
-            if let node = contact.bodyB.node{
-                node.removeFromParent()
-            }
-        }
     }
     
     func didEndContact(contact: SKPhysicsContact){}
@@ -63,6 +53,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
    
     override func update(currentTime: CFTimeInterval) {
-        Signal.update.set(currentTime);
+        Signal.update.set((self, currentTime));
     }
 }
