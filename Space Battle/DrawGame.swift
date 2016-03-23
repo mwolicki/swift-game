@@ -31,7 +31,6 @@ func startGame(scene:SKScene){
     
     Signal.update.subscribe (onUpdate) |> ignore
     Signal.didBeginContact.subscribe(onContact) |> ignore
-    
 }
 
 func onUpdate(scene:SKScene, _:CFTimeInterval){

@@ -10,12 +10,26 @@ import SpriteKit
 import CoreMotion
 import Foundation
 
- class Signal {
+class Signal {
     static let touchesBegan = Observable<Set<UITouch>>();
     static let onGameStart = Observable<(SKScene,SKView)>();
     static let accelerometerUpdate = Observable<(Double,Double)>();
     static let update = Observable<(SKScene, CFTimeInterval)>();
     static let didBeginContact = Observable<(SKScene, SKPhysicsContact)>();
+    static func frame (number:UInt) -> Observable<SKScene> {
+        var timeSum = CFTimeInterval()
+        var disposer: (() -> ()) = {}
+        let o = Observable<SKScene>(onDispose: {disposer()})
+        let number = Double(number)
+        disposer = Signal.update.subscribe({scene, interval in
+            timeSum += interval
+            if timeSum >= 1.0/number {
+                timeSum = 0
+                o.set(scene)
+            }
+        }) |> ignore
+        return o
+    }
 }
 
 
