@@ -29,11 +29,11 @@ func startGame(scene:SKScene){
     drawBackground(scene)
     drawSpaceship(scene)
     
-    Signal.update.subscribe (onUpdate) |> ignore
+    Signal.frame(5).subscribe(newAsteroid) |> ignore
     Signal.didBeginContact.subscribe(onContact) |> ignore
 }
 
-func onUpdate(scene:SKScene, _:CFTimeInterval){
+func newAsteroid(scene:SKScene){
     
     let setAsteroid = { x, type, scale in
         drawAsteroid(scene, position: CGPointMake(x, scene.size.height), type: type, scale: scale)
