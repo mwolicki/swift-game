@@ -29,37 +29,6 @@ func startGame(scene:SKScene){
     drawBackground(scene)
     drawSpaceship(scene)
     
-    let setAsteroid = { x, type, scale in
-        drawAsteroid(scene, position: CGPointMake(x, scene.size.height), type: type, scale: scale)
-    }
-    
-    setAsteroid(scene.size.width/2, .A, 0.75)
-    setAsteroid(scene.size.width/4, .B, 0.25)
-    setAsteroid(scene.size.width - 50, .C, 0.5)
-    setAsteroid(20, .D, 0.4)
-    
-    
-    
-    setAsteroid(scene.size.width/2, .B, 0.55)
-    setAsteroid(scene.size.width/4, .C, 0.15)
-    setAsteroid(scene.size.width - 50, .D, 0.15)
-    setAsteroid(20, .A, 0.1)
-    
-    
-    
-    setAsteroid(scene.size.width/2, .C, 0.1)
-    setAsteroid(scene.size.width/4, .D, 0.25)
-    setAsteroid(scene.size.width - 50, .A, 0.7)
-    setAsteroid(20, .B, 0.5)
-    
-    
-    
-    setAsteroid(scene.size.width/2, .D, 0.30)
-    setAsteroid(scene.size.width/4, .A, 0.80)
-    setAsteroid(scene.size.width - 50, .B, 0.25)
-    setAsteroid(20, .C, 0.7)
-    
-    
     Signal.update.subscribe (onUpdate) |> ignore
     Signal.didBeginContact.subscribe(onContact) |> ignore
     
