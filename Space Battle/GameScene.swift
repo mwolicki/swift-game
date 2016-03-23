@@ -36,6 +36,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Signal.onGameStart.set((self,view))
         
         if self.motionManager.accelerometerAvailable == true {
+            
+            self.motionManager.accelerometerUpdateInterval = (1/10)
+            
             self.motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.currentQueue()!, withHandler:{
                 data, error in
                 if let x = data?.acceleration.x{

@@ -71,7 +71,7 @@ func onUpdate(scene:SKScene, _:CFTimeInterval){
         drawAsteroid(scene, position: CGPointMake(x, scene.size.height), type: type, scale: scale)
     }
     
-    if arc4random_uniform(5000) > 4950{
+    if arc4random_uniform(50) > 48{
         let pos = CGFloat(arc4random_uniform(UInt32(scene.size.width)))
         
         let objPos = Int32(arc4random_uniform(4))
@@ -140,7 +140,7 @@ func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat
     
     asteroid.runAction(SKAction.repeatActionForever(SKAction.rotateByAngle(angel, duration:duration)))
     
-    let moveAction = SKAction.moveToY (-asteroid.size.height*2, duration: speed)
+    let moveAction = SKAction.moveToY (-asteroid.size.height*4, duration: speed)
     asteroid.runAction(moveAction, completion: { asteroid.removeFromParent()  })
     scene.addChild(asteroid)
 }
@@ -176,7 +176,7 @@ func moveSpaceship (model : State, scene:SKScene, spaceship: SKSpriteNode){
             ? spaceship.size.width/2
             : scene.size.width - spaceship.size.width/2
         
-        let speed = Double(1.5 * abs(pos - spaceship.position.x)/scene.size.width)
+        let speed = Double(2.5 * abs(pos - spaceship.position.x)/scene.size.width)
         let action = SKAction.moveToX (pos, duration: speed)
         
         spaceship.runAction (action, withKey: "moveSpaceship")
