@@ -92,12 +92,10 @@ func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat
     asteroid.xScale = scale
     asteroid.yScale = scale
     
-    let physicsBody = SKPhysicsBody(texture: asteroid.texture!, size: asteroid.size)
-    physicsBody.dynamic = true
-    physicsBody.affectedByGravity = false
-    physicsBody.collisionBitMask = 0
-    physicsBody.categoryBitMask = GameObject.Asteroid.rawValue | GameObject.Spaceship.rawValue
-    physicsBody.contactTestBitMask = GameObject.Laser.rawValue
+    let physicsBody =
+        PhysicsBody.basedOnTexture(asteroid.texture!, size: asteroid.size)
+        |> PhysicsBody.setCategoryBitMask (GameObject.Asteroid.rawValue | GameObject.Spaceship.rawValue)
+        |> PhysicsBody.setContactTestBitMask (GameObject.Laser.rawValue)
     asteroid.physicsBody = physicsBody
     
     
@@ -113,7 +111,30 @@ func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat
     scene.addChild(asteroid)
 }
 
-
+class PhysicsBody {
+    static func basedOnTexture (texture:SKTexture, size:CGSize) -> SKPhysicsBody{
+        return SKPhysicsBody(texture: texture, size: size) |> setupDefaults
+    }
+    
+    private static func setCategoryBitMask (categoryBitMask : UInt32) (pb:SKPhysicsBody) -> SKPhysicsBody{
+        pb.categoryBitMask = categoryBitMask
+        return pb
+    }
+    
+    
+    private static func setContactTestBitMask (contactTestBitMask : UInt32) (pb:SKPhysicsBody) -> SKPhysicsBody{
+        pb.contactTestBitMask = contactTestBitMask
+        return pb
+    }
+    
+    private static func setupDefaults (pb:SKPhysicsBody) -> SKPhysicsBody{
+        pb.dynamic = true
+        pb.affectedByGravity = false
+        pb.collisionBitMask = 0
+        return pb
+    }
+    
+}
 
 func drawSpaceship(scene:SKScene){
 

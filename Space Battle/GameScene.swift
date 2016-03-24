@@ -66,7 +66,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         Signal.touchesBegan.set(touches);
-
     }
    
     override func update(currentTime: CFTimeInterval) {
