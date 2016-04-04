@@ -28,9 +28,11 @@ enum GameObject : UInt32{
 func startGame(scene:SKScene){
     drawBackground(scene)
     drawSpaceship(scene)
+    drawPoints(0, scene: scene)
     
     Signal.frame(5).subscribe(newAsteroid) |> ignore
     Signal.didBeginContact.subscribe(onContact) |> ignore
+    GameLogic.onPointsUpdated.subscribe({ points in drawPoints(points, scene: scene) }) |> ignore
 }
 
 func newAsteroid(scene:SKScene){
@@ -61,9 +63,12 @@ func onContact (scene:SKScene, contact:SKPhysicsContact){
         
         if let node = contact.bodyA.node{
             node.removeFromParent()
+            GameEvent.onHitAsteroid.set(10)
         }
         if let node = contact.bodyB.node{
             node.removeFromParent()
+            
+            GameEvent.onHitAsteroid.set(10)
         }
     }
 }
@@ -84,6 +89,22 @@ func drawBackground(scene:SKScene){
     background.position = CGPointMake(scene.size.width/2, scene.size.height/2)
     background.zPosition = -1
     scene.addChild(background)
+}
+
+func drawPoints(points: Int, scene:SKScene){
+    if let points : SKLabelNode = scene.childNodeWithName("points") as! SKLabelNode?{
+        points.text = "points: \(points)"
+    }
+    
+    let points = SKLabelNode(fontNamed: "Chalkduster")
+    points.name = "points"
+    points.text = "points: \(points)"
+    points.fontSize = 15
+    points.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Right
+    points.fontColor = SKColor.yellowColor()
+    points.position = CGPointMake(scene.size.width-10, scene.size.height-20)
+    points.zPosition = 1
+    scene.addChild(points)
 }
 
 func drawAsteroid(scene:SKScene,  position:CGPoint, type:Asteroid, scale:CGFloat){

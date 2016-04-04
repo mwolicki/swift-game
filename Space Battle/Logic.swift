@@ -8,6 +8,13 @@ struct State
 {
     var ShipMovement = Direction.None
     var Fire = false
+    var Points = 10
+}
+
+class GameEvent{
+    
+    
+    static let onHitAsteroid = Observable<Int>()
 }
 
 class GameLogic{
@@ -15,6 +22,8 @@ class GameLogic{
     static var currentState = State()
     
     static let modelUpdated = Observable<State>()
+    
+    static let onPointsUpdated = Observable<Int>()
     
     static func start(gameScene:GameScene){
         
@@ -42,5 +51,8 @@ class GameLogic{
             currentState.Fire = false
             
         } |> ignore
+    
+        GameEvent.onHitAsteroid.subscribe({ currentState.Points += $0
+                                            onPointsUpdated.set(currentState.Points)}) |> ignore
     }
 }
