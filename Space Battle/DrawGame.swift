@@ -91,15 +91,15 @@ func drawBackground(scene:SKScene){
     scene.addChild(background)
 }
 
-func drawPoints(points: Int, scene:SKScene){
+func drawPoints(currentPoints: Int, scene:SKScene){
     if let points : SKLabelNode = scene.childNodeWithName("points") as! SKLabelNode?{
-        points.text = "points: \(points)"
+        points.removeFromParent()
     }
     
     let points = SKLabelNode(fontNamed: "Chalkduster")
     points.name = "points"
-    points.text = "points: \(points)"
-    points.fontSize = 15
+    points.text = "score: \(currentPoints)"
+    points.fontSize = 25
     points.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Right
     points.fontColor = SKColor.yellowColor()
     points.position = CGPointMake(scene.size.width-10, scene.size.height-20)
