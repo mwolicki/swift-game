@@ -26,13 +26,17 @@ enum GameObject : UInt32{
 
 
 func startGame(scene:SKScene){
-    drawBackground(scene)
-    drawSpaceship(scene)
-    drawPoints(0, scene: scene)
+    drawGameOnStart(scene)
     
     Signal.frame(5).subscribe(newAsteroid) |> ignore
     Signal.didBeginContact.subscribe(onContact) |> ignore
     GameLogic.onPointsUpdated.subscribe({ points in drawPoints(points, scene: scene) }) |> ignore
+}
+
+func drawGameOnStart(scene:SKScene){
+    drawBackground(scene)
+    drawSpaceship(scene)
+    drawPoints(0, scene: scene)
 }
 
 func newAsteroid(scene:SKScene){
@@ -221,7 +225,8 @@ func drawModel (model:State, scene:SKScene) {
         }
     }
     else{
-        //presentScene(scene.view!)
+        scene.removeAllChildren()
+        drawGameOnStart(scene)
     }
 }
 
