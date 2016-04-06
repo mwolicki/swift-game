@@ -85,6 +85,8 @@ func gameOver(scene:SKScene){
     gameover.position = CGPointMake(scene.size.width/2, scene.size.height/2)
     gameover.zPosition = 1
     scene.addChild(gameover)
+    
+    GameEvent.onGameOver.set(())
 }
 
 func drawBackground(scene:SKScene){

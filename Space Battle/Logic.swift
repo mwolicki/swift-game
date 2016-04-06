@@ -8,11 +8,11 @@ struct State
 {
     var ShipMovement = Direction.None
     var Fire = false
-    var Points = 10
+    var Points = 0
 }
 
 class GameEvent{
-    
+    static let onGameOver = Observable<Void>()
     
     static let onHitAsteroid = Observable<Int>()
 }
@@ -54,5 +54,7 @@ class GameLogic{
     
         GameEvent.onHitAsteroid.subscribe({ currentState.Points += $0
                                             onPointsUpdated.set(currentState.Points)}) |> ignore
+        
+        GameEvent.onGameOver.subscribe({ currentState.Points = 0 }) |> ignore
     }
 }
