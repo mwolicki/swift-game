@@ -1,13 +1,17 @@
 enum Direction{
     case None
-    case Left
-    case Right
+    case Left(speed:UInt8)
+    case Right(speed:UInt8)
+}
+
+enum GameState {
+    case GameOver
+    case Running(state:State)
 }
 
 struct State
 {
     var ShipMovement = Direction.None
-    var Fire = false
     var Points = 0
 }
 
@@ -19,10 +23,10 @@ class GameEvent{
 
 class GameLogic{
     
-    static var currentState = State()
+    static var currentState = GameState.Running(state: State())
     
-    static let modelUpdated = Observable<State>()
-    
+    static let onFire = Observable<Void>()
+    static let onRestartGame = Observable<Void>()
     static let onPointsUpdated = Observable<Int>()
     
     static func start(gameScene:GameScene){
@@ -36,8 +40,8 @@ class GameLogic{
         //Signal.accelerometerUpdate.subscribe({ x,_ in print("\(x)")})|>ignore
         Signal.accelerometerUpdate
             .map({x,_ in
-                return x < -0.05 ? Direction.Left
-                         : x > 0.05 ? Direction.Right : Direction.None})
+                return x < -0.01 ? Direction.Left (speed: 1)
+                    : x > 0.01 ? Direction.Right (speed: 10) : Direction.None})
             .subscribe {
                 if currentState.ShipMovement != $0{
                     currentState.ShipMovement = $0
@@ -46,15 +50,17 @@ class GameLogic{
             } |> ignore
         
         Signal.touchesBegan.subscribe { _ in
-            currentState.Fire = true
-            modelUpdated.set(currentState)
-            currentState.Fire = false
+            switch currentState{
+            case .Running(state: _) : onFire.set(())
+            case .GameOver: onRestartGame.set(())
+            }
             
         } |> ignore
     
         GameEvent.onHitAsteroid.subscribe({ currentState.Points += $0
                                             onPointsUpdated.set(currentState.Points)}) |> ignore
         
-        GameEvent.onGameOver.subscribe({ currentState.Points = 0 }) |> ignore
+        GameEvent.onGameOver.subscribe{
+            currentState = GameState.GameOver } |> ignore
     }
 }
