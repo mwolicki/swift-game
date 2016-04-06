@@ -31,6 +31,9 @@ func startGame(scene:SKScene){
     Signal.frame(5).subscribe(newAsteroid) |> ignore
     Signal.didBeginContact.subscribe(onContact) |> ignore
     GameLogic.onPointsUpdated.subscribe({ points in drawPoints(points, scene: scene) }) |> ignore
+    GameLogic.onFire.subscribe { onFire(scene) } |> ignore
+    GameLogic.onRestartGame.subscribe { onRestart(scene) } |> ignore
+    GameLogic.onDirectionChanged.subscribe { onDirectionChanged($0, scene: scene) } |> ignore
 }
 
 func drawGameOnStart(scene:SKScene){
@@ -184,11 +187,11 @@ func drawSpaceship(scene:SKScene){
     scene.addChild(spaceship)
 }
 
-func moveSpaceship (model : State, scene:SKScene, spaceship: SKSpriteNode){
+func moveSpaceship (direction : Direction, scene:SKScene, spaceship: SKSpriteNode){
     spaceship.removeActionForKey("moveSpaceship")
     
-    if model.ShipMovement != .None {
-        let pos = model.ShipMovement == Direction.Left
+    if direction != .None {
+        let pos = direction == Direction.Left
             ? spaceship.size.width/2
             : scene.size.width - spaceship.size.width/2
         
@@ -219,16 +222,21 @@ func fire(scene:SKScene, position:CGPoint){
     scene.addChild(laser)
 }
 
-func drawModel (model:State, scene:SKScene) {
+func onFire(scene:SKScene){
     if let spaceship : SKSpriteNode = scene.childNodeWithName("spaceship") as! SKSpriteNode?{
-        moveSpaceship(model, scene: scene, spaceship: spaceship)
-        if model.Fire {
-            fire(scene, position: spaceship.position)
-        }
-    }
-    else{
-        scene.removeAllChildren()
-        drawGameOnStart(scene)
+        fire(scene, position: spaceship.position)
     }
 }
+
+func onDirectionChanged(direction:Direction, scene:SKScene){
+    if let spaceship : SKSpriteNode = scene.childNodeWithName("spaceship") as! SKSpriteNode?{
+        moveSpaceship(direction, scene: scene, spaceship: spaceship)
+    }
+}
+
+func onRestart(scene:SKScene){
+    scene.removeAllChildren()
+    drawGameOnStart(scene)
+}
+
 
