@@ -40,13 +40,14 @@ class GameLogic{
         //Signal.accelerometerUpdate.subscribe({ x,_ in print("\(x)")})|>ignore
         Signal.accelerometerUpdate
             .map({x,_ in
-                return x < -0.01 ? Direction.Left
-                    : x > 0.01 ? Direction.Right : Direction.None})
+                return x < -0.02 ? Direction.Left
+                    : x > 0.02 ? Direction.Right : Direction.None})
             .subscribe {
                 switch currentState {
-                case .Running(var currentState):
-                    if currentState.ShipMovement != $0{
-                        currentState.ShipMovement = $0
+                case .Running(var state):
+                    if state.ShipMovement != $0{
+                        state.ShipMovement = $0
+                        currentState = .Running(state: state)
                         onDirectionChanged.set($0)
                     }
                 default: ()
@@ -66,6 +67,7 @@ class GameLogic{
             switch currentState{
             case .Running(var state) :
                 state.Points += $0
+                currentState = .Running(state: state)
                 onPointsUpdated.set(state.Points)
             default: ()
             }}) |> ignore
