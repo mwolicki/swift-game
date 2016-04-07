@@ -1,8 +1,19 @@
 enum Direction{
     case None
-    case Left
-    case Right
+    case Left (speed:Double)
+    case Right (speed:Double)
 }
+
+func ==(a: Direction, b: Direction) -> Bool {
+    switch (a, b) {
+    case (.None, .None): return true
+    case (.Left(let a),  .Left(let b)): return a == b
+    case (.Right(let a), .Right(let b)) : return a == b
+    default: return false
+    }
+}
+
+func !=(a: Direction, b: Direction) -> Bool { return !(a==b) }
 
 enum GameState {
     case GameOver
@@ -40,8 +51,8 @@ class GameLogic{
         //Signal.accelerometerUpdate.subscribe({ x,_ in print("\(x)")})|>ignore
         Signal.accelerometerUpdate
             .map({x,_ in
-                return x < -0.02 ? Direction.Left
-                    : x > 0.02 ? Direction.Right : Direction.None})
+                return x < -0.02 ? Direction.Left (speed: 1+x)
+                    : x > 0.02 ? Direction.Right(speed: 1-x) : Direction.None})
             .subscribe {
                 switch currentState {
                 case .Running(var state):

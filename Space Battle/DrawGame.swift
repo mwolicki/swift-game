@@ -187,16 +187,22 @@ func drawSpaceship(scene:SKScene){
     scene.addChild(spaceship)
 }
 
+func getSpaceshipSpeed(direction : Direction, scene:SKScene, spaceship: SKSpriteNode) -> (CGFloat, Double){
+        switch direction{
+        case .Left (let speed): return (spaceship.size.width/2, speed)
+        case .Right (let speed): return (scene.size.width - spaceship.size.width/2, speed)
+        default: return (0,0)
+        }
+}
+
 func moveSpaceship (direction : Direction, scene:SKScene, spaceship: SKSpriteNode){
     spaceship.removeActionForKey("moveSpaceship")
     
     if direction != .None {
-        let pos = direction == Direction.Left
-            ? spaceship.size.width/2
-            : scene.size.width - spaceship.size.width/2
+        let (pos, speedFactor) = getSpaceshipSpeed(direction, scene:scene, spaceship: spaceship)
         
-        let speed = Double(2.5 * abs(pos - spaceship.position.x)/scene.size.width)
-        let action = SKAction.moveToX (pos, duration: speed)
+        let speed = Double(10 * abs(pos - spaceship.position.x)/scene.size.width)
+        let action = SKAction.moveToX (pos, duration: speed*min(0.2, speedFactor / 1.5))
         
         spaceship.runAction (action, withKey: "moveSpaceship")
     }
